@@ -13,7 +13,9 @@
 
         /* 
             01. default implementation
+            02. remove the direct dependency on the store from the component (by passing the state and dispatch)
         */
+
         function spinnerReducer(currentState = 0, action){
             if (action.type === 'UP') return currentState + 1;
             if (action.type === 'DOWN') return currentState - 1;
@@ -24,14 +26,14 @@
         class Spinner extends React.Component{
             onDownClick = () => {
                 var down_action = { type : 'DOWN'};
-                this.props.store.dispatch(down_action);
+                this.props.dispatch(down_action);
             }
             onUpClick = () => {
                 var up_action = { type : 'UP' };
-                this.props.store.dispatch(up_action);
+                this.props.dispatch(up_action);
             }
             render(){
-                const value = this.props.store.getState();
+                const { value } = this.props;
                 return(
                     <div>
                         <h1>Spinner</h1>
@@ -47,7 +49,9 @@
         var store = StateManager.createStore(spinnerReducer);
 
         function renderSpinner(){
-            ReactDOM.render(<Spinner store={store} />
+            const value = store.getState(),
+                dispatch = store.dispatch;
+            ReactDOM.render(<Spinner value={value} dispatch={dispatch} />
                 , document.getElementById('root'));
 
         }
