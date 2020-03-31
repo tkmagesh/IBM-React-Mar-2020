@@ -31,3 +31,7 @@ li{
     border:  2px solid gray;
     background-color: #e7e7e7;
 }
+
+.navlink{
+    margin-right: 10px;
+}
