@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-export class BugEdit extends React.Component {
+export class BugEdit extends Component {
     state = {
         newBugName: ''
     };

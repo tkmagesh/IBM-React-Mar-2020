@@ -7,11 +7,12 @@ import { BugSort, BugStats, BugEdit, BugList } from './views';
 
 class BugTracker extends Component {
     render() {
-        const { bugs, addNew, remove, toggle, removeClosed, applyFilter } = this.props;
+        const { bugs, addNew, remove, toggle, removeClosed, applyFilter, load } = this.props;
         return (
             <Fragment>
                 <h3>Bug Tracker</h3>
                 <hr />
+                <input type="button" value="LOAD BUGS" onClick={load} />
                 <div>
                     <label>Apply Filter : </label>
                     <input type="checkbox" onInput={ evt => applyFilter(evt.target.checked)} />

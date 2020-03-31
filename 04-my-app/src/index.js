@@ -3,12 +3,15 @@ import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 
 import './index.css';
-import App from './App';
 import * as serviceWorker from './serviceWorker';
 
 import appStore from './store';
 import BugTracker from './bugTracker';
 import Spinner from './spinner';
+
+import axios from 'axios';
+
+window['axios'] = axios;
 
   ReactDOM.render(
       <Provider store={appStore}>
