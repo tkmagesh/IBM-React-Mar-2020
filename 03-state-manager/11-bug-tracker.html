@@ -8,10 +8,10 @@
     <script type="text/usecases">
         (done) 1. Add new bugs
         (done) 2. List the added bugs
-        3. Remove any bug
-        4. Toggle the 'closed' status of any bug
-        5. Remove closed bugs
-        6. Display stats ( # of closed bugs / total # of bugs )
+        (done) 3. Remove any bug
+        (done) 4. Toggle the 'closed' status of any bug
+        (done) 5. Remove closed bugs
+        (done) 6. Display stats ( # of closed bugs / total # of bugs )
         7. Sort the bugs (Homework)
         8. Persist the bugs in the server
         9. Make the bugs accessible using unique urls
@@ -72,6 +72,11 @@
                 const newState = currentState.map(bug => bug.id === bugToReplace.id ? bugToReplace : bug);
                 return newState;
             }
+            if (action.type === 'REMOVE_BUGS'){
+                const bugsToRemove = action.payload;
+                const newState = currentState.filter(bug => !bugsToRemove.find(bugToRemove => bugToRemove.id === bug.id));
+                return newState;
+            }
             return currentState;
         }
         
@@ -96,32 +101,42 @@
                 const toggledBug = { ...bugToToggle, isClosed : !bugToToggle.isClosed };
                 const action = { type : 'REPLACE_BUG', payload : toggledBug };
                 return action;
+            },
+            removeClosed(bugs){
+                /* We donot have access to the currentState in the actionCreators, so we pass it from the UI - bad practice */
+                const bugsToRemove = bugs.filter(bug => bug.isClosed);
+                const action = { type : 'REMOVE_BUGS', payload : bugsToRemove};
+                return action;
             }
         }
+
         class BugTracker extends React.Component{
             state = { 
                 newBugName : ''
             };
 
             render(){
-                const { bugs, addNew, remove, toggle } = this.props,
+                const { bugs, addNew, remove, toggle, removeClosed } = this.props,
                     { newBugName } = this.state,
-                    bugsList = bugs.map(bug => (
-                        <li key={bug.id}>
-                            <span className="bugname" onClick={() => toggle(bug)}>
-                                {bug.name}
-                            </span>
-                            <div>[{bug.isClosed.toString()}]</div>
-                            <div className="datetime">{bug.createdAt.toString()}</div>
-                            <input type="button" value="Remove" onClick={ () => remove(bug) } />
-                        </li>
-                    ))
+                    closedCount = bugs.reduce((result, bug) => bug.isClosed ? ++result : result, 0),
+                    bugsList = bugs.map(bug => {
+                        const bugClassNames = 'bugname ' + (bug.isClosed ?  'closed' : '');
+                        return (
+                            <li key={bug.id}>
+                                <span className={bugClassNames} onClick={() => toggle(bug)}>
+                                    {bug.name}
+                                </span>
+                                <div className="datetime">{bug.createdAt.toString()}</div>
+                                <input type="button" value="Remove" onClick={ () => remove(bug) } />
+                            </li>
+                        )
+                    });
                 return(
                     <React.Fragment>
                         <h1>Bug Tracker</h1>
                         <hr/>
                         <section className="stats">
-                            <span className="closed">1</span>
+                            <span className="closed">{closedCount}</span>
                             <span> / </span>
                             <span>{bugs.length}</span>
                         </section>
@@ -143,7 +158,7 @@
                             <ol>
                                {bugsList}
                             </ol>
-                            <input type="button" value="Remove Closed" />
+                            <input type="button" value="Remove Closed" onClick={ () => removeClosed(bugs)}/>
                         </section>
                     </React.Fragment>
                 )
