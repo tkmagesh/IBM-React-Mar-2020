@@ -67,6 +67,11 @@
                 const newState = currentState.filter(bug => bug.id !== bugToRemove.id);
                 return newState;
             }
+            if (action.type === 'REPLACE_BUG'){
+                const bugToReplace = action.payload;
+                const newState = currentState.map(bug => bug.id === bugToReplace.id ? bugToReplace : bug);
+                return newState;
+            }
             return currentState;
         }
         
@@ -86,6 +91,11 @@
             remove(bugToRemove){
                 const action = { type : 'REMOVE_BUG', payload : bugToRemove };
                 return action;
+            },
+            toggle(bugToToggle){
+                const toggledBug = { ...bugToToggle, isClosed : !bugToToggle.isClosed };
+                const action = { type : 'REPLACE_BUG', payload : toggledBug };
+                return action;
             }
         }
         class BugTracker extends React.Component{
@@ -94,11 +104,14 @@
             };
 
             render(){
-                const { bugs, addNew, remove } = this.props,
+                const { bugs, addNew, remove, toggle } = this.props,
                     { newBugName } = this.state,
                     bugsList = bugs.map(bug => (
                         <li key={bug.id}>
-                            <span className="bugname">{bug.name}</span>
+                            <span className="bugname" onClick={() => toggle(bug)}>
+                                {bug.name}
+                            </span>
+                            <div>[{bug.isClosed.toString()}]</div>
                             <div className="datetime">{bug.createdAt.toString()}</div>
                             <input type="button" value="Remove" onClick={ () => remove(bug) } />
                         </li>
