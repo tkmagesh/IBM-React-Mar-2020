@@ -6,8 +6,8 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Bug Tracker</title>
     <script type="text/usecases">
-        1. Add new bugs
-        2. List the added bugs
+        (done) 1. Add new bugs
+        (done) 2. List the added bugs
         3. Remove any bug
         4. Toggle the 'closed' status of any bug
         5. Remove closed bugs
@@ -62,6 +62,11 @@
                 const newState = [...currentState, newBug];
                 return newState;
             }
+            if (action.type === 'REMOVE_BUG'){
+                const bugToRemove = action.payload;
+                const newState = currentState.filter(bug => bug.id !== bugToRemove.id);
+                return newState;
+            }
             return currentState;
         }
         
@@ -77,16 +82,27 @@
                 };
                 const action = { type : 'ADD_NEW_BUG', payload : newBug};
                 return action;
+            },
+            remove(bugToRemove){
+                const action = { type : 'REMOVE_BUG', payload : bugToRemove };
+                return action;
             }
         }
         class BugTracker extends React.Component{
             state = { 
                 newBugName : ''
             };
-            
+
             render(){
-                const { bugs, addNew } = this.props,
-                    { newBugName } = this.state;
+                const { bugs, addNew, remove } = this.props,
+                    { newBugName } = this.state,
+                    bugsList = bugs.map(bug => (
+                        <li key={bug.id}>
+                            <span className="bugname">{bug.name}</span>
+                            <div className="datetime">{bug.createdAt.toString()}</div>
+                            <input type="button" value="Remove" onClick={ () => remove(bug) } />
+                        </li>
+                    ))
                 return(
                     <React.Fragment>
                         <h1>Bug Tracker</h1>
@@ -112,16 +128,7 @@
                         </section>
                         <section className="list">
                             <ol>
-                                <li>
-                                    <span className="bugname">[This is bug - 1]</span>
-                                    <div className="datetime">[Created At]</div>
-                                    <input type="button" value="Remove"  />
-                                </li>
-                                <li>
-                                    <span className="bugname closed">[This is bug - 2]</span>
-                                    <div className="datetime">[Created At]</div>
-                                    <input type="button" value="Remove"  />
-                                </li>
+                               {bugsList}
                             </ol>
                             <input type="button" value="Remove Closed" />
                         </section>
