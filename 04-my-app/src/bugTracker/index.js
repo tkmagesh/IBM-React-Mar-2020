@@ -7,14 +7,14 @@ import { BugSort, BugStats, BugEdit, BugList } from './views';
 
 class BugTracker extends Component {
     render() {
-        const { bugs, addNew, remove, toggle, removeClosed } = this.props;
+        const { bugs, addNew, remove, toggle, removeClosed, applyFilter } = this.props;
         return (
             <Fragment>
                 <h3>Bug Tracker</h3>
                 <hr />
                 <div>
                     <label>Apply Filter : </label>
-                    <input type="checkbox" />
+                    <input type="checkbox" onInput={ evt => applyFilter(evt.target.checked)} />
                 </div>
                 <BugStats bugs={bugs} />
                 <BugSort />
@@ -27,8 +27,12 @@ class BugTracker extends Component {
 
 //extracting data for the component from the store state
 function mapStateToProps(appState){
-    const bugs = appState.bugsData.filter(bug => bug.id % 2 === appState.spinnerData % 2);
-    return { bugs : bugs };
+    if (appState.bugsFilterData){
+        const bugs = appState.bugsData.filter(bug => bug.id % 2 === appState.spinnerData % 2);
+        return { bugs : bugs };
+    } else {
+        return {bugs : appState.bugsData};
+    }
 }
 
 //converting the dispatch to action dispatchers for the component

@@ -1,9 +1,10 @@
 import { createStore, combineReducers } from 'redux';
-import { bugsReducer } from '../bugTracker/reducers';
+import { bugsReducer, bugsFilterReducer } from '../bugTracker/reducers';
 import { spinnerReducer } from '../spinner/reducers';
 
 const rootReducer = combineReducers({
    bugsData : bugsReducer,
+   bugsFilterData : bugsFilterReducer,
    spinnerData : spinnerReducer
 });
 
