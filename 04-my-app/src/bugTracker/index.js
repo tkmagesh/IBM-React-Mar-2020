@@ -12,6 +12,10 @@ class BugTracker extends Component {
             <Fragment>
                 <h3>Bug Tracker</h3>
                 <hr />
+                <div>
+                    <label>Apply Filter : </label>
+                    <input type="checkbox" />
+                </div>
                 <BugStats bugs={bugs} />
                 <BugSort />
                 <BugEdit addNew={addNew} />
@@ -23,7 +27,7 @@ class BugTracker extends Component {
 
 //extracting data for the component from the store state
 function mapStateToProps(appState){
-    const bugs = appState.bugsData;
+    const bugs = appState.bugsData.filter(bug => bug.id % 2 === appState.spinnerData % 2);
     return { bugs : bugs };
 }
 

@@ -4,6 +4,7 @@ export const BugItem = ({ bug, toggle, remove }) => {
     const bugClassNames = 'bugname ' + (bug.isClosed ? 'closed' : '');
     return (
         <li>
+            <pre>[{bug.id}]</pre>
             <span className={bugClassNames} onClick={() => toggle(bug)}>
                 {bug.name}
             </span>
