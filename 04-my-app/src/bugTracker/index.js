@@ -6,7 +6,7 @@ export class BugTracker extends Component {
         const { bugs, addNew, remove, toggle, removeClosed } = this.props;
         return (
             <Fragment>
-                <h1>Bug Tracker</h1>
+                <h3>Bug Tracker</h3>
                 <hr />
                 <BugStats bugs={bugs} />
                 <BugSort />
