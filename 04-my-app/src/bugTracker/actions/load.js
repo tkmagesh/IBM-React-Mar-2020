@@ -19,9 +19,30 @@ function getLocalBugs(){
     ]
 }
 
+function getServerBugs(){
+    return axios
+        .get('http://localhost:3030/bugs')
+        .then(response => response.data);
+}
+
 export function load(){
-    const bugs = getLocalBugs();
-    const action = { type : 'LOAD_BUGS', payload : bugs };
-    return action;
-    
+    //sync
+    /* const action = { type: 'LOAD_BUGS', payload: getLocalBugs() };
+    return action; */
+
+    //this will be handled by the async middleware
+    /* return function(dispatch){
+        getServerBugs()
+            .then(bugs => {
+                const action = { type : 'LOAD_BUGS', payload : bugs};
+                dispatch(action);
+            });
+    } */
+
+    //this will be handled by the promise middleware
+    return getServerBugs()
+        .then(bugs => {
+            const action = { type: 'LOAD_BUGS', payload: bugs };
+            return action;
+        });
 }
